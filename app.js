@@ -250,7 +250,7 @@ app.post('/api/sendmessage', async (req, res) => {
 
               // const client = whatsappFactoryFunction(customerId);
               let sessionObj = sessionMap.get(customerId);
-              const client = sessionObj?.client;
+              const client = sessionObj.client;
               if (messagetype === 'text') {
                 await client.sendMessage(`${mobileno}@c.us`, message).then(async (response) => {
                   await User.updateOne({ _id: customerId }, { $inc: { AvailableCredits: -1 } });
