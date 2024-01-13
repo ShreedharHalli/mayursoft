@@ -342,8 +342,10 @@ async function initiateAllWhatsappClients() {
 
     for (const user of users) {
       const IsAlreadyInitialized = alreadyInitialized.get(user.connectedWhatsappNo);
+      console.log(`this condtion should be true but is ${user.connectedWhatsappNo} !== '0'`);
+      console.log(`this condtion should be true but is ${IsAlreadyInitialized} !== undefined`);
       if (user.connectedWhatsappNo !== '0' && IsAlreadyInitialized !== undefined) {
-
+        console.log('i am called');
       
         const client = whatsappFactoryFunction(user._id);
         const customerId = user._id.toString();
