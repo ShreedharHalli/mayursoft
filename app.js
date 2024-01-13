@@ -29,7 +29,7 @@ const isCurrNoIsRegisteredWithWhatsapp = await client.isRegisteredUser(number);
 
 
 const app = express();
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT || 80
 const server = http.createServer(app);
 const io = new Server(server);
 
