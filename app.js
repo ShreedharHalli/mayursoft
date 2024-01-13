@@ -266,13 +266,12 @@ app.post('/api/sendmessage', async (req, res) => {
                 await client.sendMessage(`${mobileno}@c.us`, message).then(async (response) => {
                   await User.updateOne({ _id: customerId }, { $inc: { AvailableCredits: -1 } });
                   let customerName = user.fullname;
-                  // console.log(JSON.stringify(response));
                   let messageId = response._data.id._serialized;
-                  console.log(messageId);
                   MessageLog.create({ custName: customerName, custId: customerId, sentTo: mobileno, content: message, media: 0, messageId: messageId, status: 'sent' })
                   res.status(200).json({
                     status: true,
-                    response: 'Message sent successfully'
+                    response: 'Message sent successfully',
+                    messageId: messageId
                   }).catch(err => {
                     console.log(err);
                     res.status(500).json({
@@ -299,12 +298,13 @@ app.post('/api/sendmessage', async (req, res) => {
                 await client.sendMessage(`${mobileno}@c.us`, media, { caption: message }).then(async (response) => {
                   await User.updateOne({ _id: customerId }, { $inc: { AvailableCredits: -1 } });
                   let customerName = user.fullname;
-                  let messageId ='';
+                  let messageId = response._data.id._serialized;
                   MessageLog.create({ custName: customerName, custId: customerId, sentTo: mobileno, content: message, media: true, messageId: messageId, status: 'sent' })
                   await manageUploadedFile('delete', file);
                   res.status(200).json({
                     status: true,
-                    response: 'Message sent successfully'
+                    response: 'Message sent successfully',
+                    messageId: messageId
                   }).catch(err => {
                     manageUploadedFile('delete', file);
                     console.log(err);
