@@ -19,6 +19,7 @@ const MessageLog = require('./models/MessageLog');
 
 dotenv.config();
 const sessionMap = new Map();
+const alreadyInitialized = new Map();
 
 /* 
 const msg = client.getMessageById(messageId);
@@ -62,7 +63,7 @@ mongoose.connect(process.env.MONGODBURI).then(e => {
 app.get('*', checkUser);
 app.get('/', (req, res) => res.render('home'));
 app.get('/customerpage', requireAuth, (req, res) => res.render('customerpage'));
-// app.get('/adminpage', requireAuth, (req, res) =>  res.render('adminpage'));
+app.get('/adminpage', requireAuth, (req, res) =>  res.render('adminpage'));
 app.use(authRoutes);
 
 
@@ -129,6 +130,11 @@ io.on("connection", (socket) => {
           let connectedWhatsappNo = client.info.wid.user;
           console.log('connected Whatsapp No is ' + connectedWhatsappNo);
           await insertClientDetailstoCustDoc(customerId, connectedWhatsappNo);
+          sessionMap.set(customerId, {
+            id: customerId,
+            client: client,
+          });
+          initiateAllWhatsappClients()
         } else {
           console.log('Client is already connected');
           socket.emit('ClientIsAlreadyConnected');
@@ -136,8 +142,6 @@ io.on("connection", (socket) => {
       } catch (error) {
         console.log(error);
       }
-      
-      
     });
     client.initialize();
   });
@@ -335,7 +339,10 @@ async function initiateAllWhatsappClients() {
     const users = await User.find({ connectedWhatsappNo: { $ne: '0' } });
 
     for (const user of users) {
-      if (user.connectedWhatsappNo !== '0') {
+      const IsAlreadyInitialized = alreadyInitialized.get(user.connectedWhatsappNo);
+      if (user.connectedWhatsappNo !== '0' && IsAlreadyInitialized !== undefined) {
+
+      
         const client = whatsappFactoryFunction(user._id);
         const customerId = user._id.toString();
 
@@ -345,6 +352,8 @@ async function initiateAllWhatsappClients() {
             id: customerId,
             client: client,
           });
+          // CALLING IT AT STARTUP AND AT NEW CONNECTION EVENT BUT DO NOT WANT TO RUN ALL THE INTITIALIZED WHATSAPP TO INITIALIZE AT CONNECTION NEW WHATSAPP CONNECTION EVENT.
+          alreadyInitialized.set(user.connectedWhatsappNo, 'initialized');
         });
 
         client.on('message', async (msg) => {
@@ -433,7 +442,8 @@ async function initiateAllWhatsappClients() {
 
         await client.initialize();
       }
-    }
+      }
+    
   } catch (error) {
     console.error('Error initiating WhatsApp clients:', error.message);
   }
