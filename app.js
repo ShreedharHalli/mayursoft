@@ -114,22 +114,29 @@ io.on("connection", (socket) => {
       console.log('qr side fired');
       // let checkIfAlreadyConnected = (await User.findOne({ _id: customerId }))?.connectedWhatsappNo;
       try {
-        await User.findById(customerId, (err, user) => {
-          let checkIfAlreadyConnected = user.connectedWhatsappNo;
-          if (checkIfAlreadyConnected === '0') {
-            console.log('Client is ready!');
-            socket.emit('ClientIsReady');
-            let connectedWhatsappNo = client.info.wid.user;
-            console.log('connected Whatsapp No is ' + connectedWhatsappNo);
-            insertClientDetailstoCustDoc(customerId, connectedWhatsappNo)
-          } else {
-            console.log('Client is already connected');
-            socket.emit('ClientIsAlreadyConnected');
-          }
-        })
+        const user = await User.findById(customerId);
+        
+        if (!user) {
+          console.log('User not found');
+          return; // or handle as needed
+        }
+      
+        let checkIfAlreadyConnected = user.connectedWhatsappNo;
+      
+        if (checkIfAlreadyConnected === '0') {
+          console.log('Client is ready!');
+          socket.emit('ClientIsReady');
+          let connectedWhatsappNo = client.info.wid.user;
+          console.log('connected Whatsapp No is ' + connectedWhatsappNo);
+          await insertClientDetailstoCustDoc(customerId, connectedWhatsappNo);
+        } else {
+          console.log('Client is already connected');
+          socket.emit('ClientIsAlreadyConnected');
+        }
       } catch (error) {
         console.log(error);
       }
+      
       
     });
     client.initialize();
