@@ -358,6 +358,10 @@ async function initiateAllWhatsappClients() {
           // CALLING IT AT STARTUP AND AT NEW CONNECTION EVENT BUT DO NOT WANT TO RUN ALL THE INTITIALIZED WHATSAPP TO INITIALIZE AT CONNECTION NEW WHATSAPP CONNECTION EVENT.
           alreadyInitialized.set(user.connectedWhatsappNo, 'initialized');
         });
+        
+        client.on('qr', async () => {
+          console.log('WhatsApp is NOT connected and asking QR code');
+        })
 
         client.on('message', async (msg) => {
           // Call webhook here
