@@ -342,6 +342,7 @@ async function initiateAllWhatsappClients() {
 
     for (const user of users) {
       const IsAlreadyInitialized = alreadyInitialized.get(user.connectedWhatsappNo);
+      console.log(IsAlreadyInitialized);
       if (user.connectedWhatsappNo !== '0' && IsAlreadyInitialized !== undefined) {
 
       
