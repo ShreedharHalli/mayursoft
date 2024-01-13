@@ -266,8 +266,8 @@ app.post('/api/sendmessage', async (req, res) => {
                 await client.sendMessage(`${mobileno}@c.us`, message).then(async (response) => {
                   await User.updateOne({ _id: customerId }, { $inc: { AvailableCredits: -1 } });
                   let customerName = user.fullname;
-                  console.log(JSON.stringify(response));
-                  let messageId = response.messageId;
+                  // console.log(JSON.stringify(response));
+                  let messageId = response._data.id._serialized;
                   console.log(messageId);
                   MessageLog.create({ custName: customerName, custId: customerId, sentTo: mobileno, content: message, media: 0, messageId: messageId, status: 'sent' })
                   res.status(200).json({
@@ -299,7 +299,7 @@ app.post('/api/sendmessage', async (req, res) => {
                 await client.sendMessage(`${mobileno}@c.us`, media, { caption: message }).then(async (response) => {
                   await User.updateOne({ _id: customerId }, { $inc: { AvailableCredits: -1 } });
                   let customerName = user.fullname;
-                  let messageId = messageSent.id._serialized;
+                  let messageId ='';
                   MessageLog.create({ custName: customerName, custId: customerId, sentTo: mobileno, content: message, media: true, messageId: messageId, status: 'sent' })
                   await manageUploadedFile('delete', file);
                   res.status(200).json({
@@ -346,8 +346,6 @@ async function initiateAllWhatsappClients() {
       
         const client = whatsappFactoryFunction(user._id);
         const customerId = user._id.toString();
-        console.log(`original user id is ${user._id}`);
-        console.log(`user id is ${customerId}`);
         client.on('ready', async () => {
           console.log(`${user.fullname}'s WhatsApp is connected and in the ready state`);
           sessionMap.set(customerId, {
