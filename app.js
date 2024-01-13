@@ -266,7 +266,7 @@ app.post('/api/sendmessage', async (req, res) => {
                 await client.sendMessage(`${mobileno}@c.us`, message).then(async (response) => {
                   await User.updateOne({ _id: customerId }, { $inc: { AvailableCredits: -1 } });
                   let customerName = user.fullname;
-                  console.log(`message response: ${response}`);
+                  console.log(JSON.stringify(response));
                   let messageId = response.messageId;
                   console.log(messageId);
                   MessageLog.create({ custName: customerName, custId: customerId, sentTo: mobileno, content: message, media: 0, messageId: messageId, status: 'sent' })
