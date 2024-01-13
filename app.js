@@ -342,12 +342,13 @@ async function initiateAllWhatsappClients() {
 
     for (const user of users) {
       const IsAlreadyInitialized = alreadyInitialized.get(user.connectedWhatsappNo);
+      console.log(`connected whatsapp number is ${user.connectedWhatsappNo}`);
+      console.log(`and first condition should be true and is ${user.connectedWhatsappNo !== '0'}`);
       if (user.connectedWhatsappNo !== '0' && IsAlreadyInitialized !== undefined) {
 
       
         const client = whatsappFactoryFunction(user._id);
         const customerId = user._id.toString();
-          console.log(`customer id is ${customerId}`);
         client.on('ready', async () => {
           console.log(`${user.fullname}'s WhatsApp is connected and in the ready state`);
           sessionMap.set(customerId, {
