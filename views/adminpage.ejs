@@ -1,0 +1,387 @@
+<%- include('partials/header'); -%>
+<div class="adminPage">
+<nav>
+    <div class="nav-wrapper z-depth-5">
+        <a href="#" class="brand-logo light-green-text">MayurSoft</a>
+        <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <li><a class="light-green-text" href='#'><%= `Welcome, ${user.email}` %></a></li>
+        <li><a class="light-green-text dropdown-trigger" href='#' data-target='dropdown1'>Components</a></li>
+        <li><a class="waves-effect waves-light black-text">
+        </a></li>
+        <li><a class="light-green-text" href="/logout">Log Out</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div class="container" style="margin-top: 30px; width: fit-content;">
+  <table class="highlight centered responsive-table z-depth-5">
+    <thead>
+      <tr>
+        <th>Full Name</th>
+        <th>Email</th>
+        <th>Customer ID</th>
+        <th>Whatsapp No</th>
+        <th>Balance Credits</th>
+        <th>Issue Credits</th>
+        <th>Webhook</th>
+        <th>Delete User</th>
+      </tr>
+    </thead>
+        <% if (userListForAdmin !='' ) { %>
+          <% userListForAdmin.forEach((elem, index)=> { %>
+    <tbody>
+      <tr>
+        <td>
+          <%= elem.fullname %>
+        </td>
+        <td>
+          <%= elem.email %>
+        </td>
+        <td>
+          <%= elem._id %>
+        </td>
+        <td>
+          <%= elem.connectedWhatsAppDevices %>
+        </td>
+        <td>
+          <%= elem.AvailableCredits %>
+        </td>
+        <td id="<%= elem._id %>"><i href="#issueCreditsToCustomerModal"
+          class="material-icons issueCreditsBtn modal-trigger">add_shopping_cart</i></td>
+        <td  id="<%= elem._id %>" data-webHook="<%= elem.webHookUrl %>"><i href="#setwebhookModal"
+          class="material-icons setWebhookBtn modal-trigger">link</i></td>
+
+          <td id="<%= elem._id %>" data-fullname="<%= elem.fullname %>"><i href="#deleteCustomerModal"
+            class="material-icons deleteCustomerBtn modal-trigger">delete_sweep</i></td>
+      </tr>
+      </tbody>
+      <% }) %>
+
+      <% } else { %>
+
+        <>Couldn't find users in Database</h3>
+          <% } %>  
+  </table>
+    
+
+</div>
+
+<!-- Dropdown Structure -->
+<ul id='dropdown1' class='dropdown-content'>
+    <li><a href="#createNewCustomerModal" class="modal-trigger">Create New Customer</a></li>
+    <li><a href="#!">two</a></li>
+    <li class="divider" tabindex="-1"></li>
+    <li><a href="#!">three</a></li>
+    <li><a href="#!">four</a></li>
+    <li><a href="#!">five</a></li>
+  </ul>
+
+  
+  <!-- CREATE NEW CUSTOMER MODAL -->
+  <div id="createNewCustomerModal" class="modal">
+    <div class="modal-content">
+      <h4 class="center">Create New Customer</h4>
+      <div class="row">
+        <form class="col s12" id="createNewCustomerForm">
+          <div class="row">
+            <div class="input-field col s12">
+              <input name="fullName" id="fullName" type="text" class="validate white-text" required>
+              <label for="fullName">Full Name</label>
+              <div class="fullname-error"></div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s12">
+              <input name="email" id="email" type="email" class="validate white-text" required>
+              <label for="email">Email</label>
+              <div class="email-error"></div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s12">
+              <input name="password" id="password" type="password" class="validate white-text" required>
+              <label for="password">Password</label>
+              <div class="password-error"></div>
+            </div>
+          </div>
+          <button class="waves-effect waves-light btn red center">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  
+
+  <!-- ISSUE CREDITS MODAL -->
+  <div id="issueCreditsToCustomerModal" class="modal red lighten-5">
+    <div class="modal-content">
+      <h4 class="center">Issue Credits</h4>
+      <div class="row">
+        <form class="col s12" id="issueCreditsToCustomerForm">
+          <div class="row">
+            <div class="input-field col s12">
+              <input name="issueCredits" id="issueCredits" type="text" class="validate white-text" required>
+              <label for="issueCredits">Credits</label>
+            </div>
+          </div>
+          <div class="row" style="display: none;">
+            <div>
+              <input name="customerID" id="customerID" type="text">
+            </div>
+          </div>
+          <h5 id="numberError" class="red-text" style="display: none;">Please enter valid numbers</h5>
+          <button class="waves-effect waves-light btn red center">Submit</button>
+        </form>
+      </div>
+      <h6 id="insufficientCreditsErrorMsg" class="red-text" style="display: none;">Insufficient credits available in your account.</h6>
+    </div>
+  </div>
+
+  
+
+  <!-- DELETE CUSTOEMR MODAL -->
+  <div id="deleteCustomerModal" class="modal red lighten-5">
+    <div class="modal-content">
+      <h4 class="center">Are you sure about deleting below customer ?</h4>
+      <div class="row">
+        <form class="col s12" id="deleteCustomerForm">
+          <div class="row">
+            <div class="input-field col s12 center">
+              <h5 id="deleteCustomerDislayName"></h5>
+            </div>
+          </div>
+          <button class="waves-effect waves-light btn red center">Delete</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- SETWEBHOOK MODAL -->
+  <div id="setwebhookModal" class="modal red lighten-5">
+    <div class="modal-content">
+      <h4 class="center">Enter Webhook URL Here</h4>
+      <div class="row">
+        <form class="col s12" id="enterWebhookForm">
+          <div class="row">
+            <div class="input-field col s12">
+              <input name="setWebhook" id="setWebhook" type="text" class="validate white-text" required>
+              <label for="setWebhook"></label>
+            </div>
+          </div>
+          <button class="waves-effect waves-light btn red center">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+
+<ul id="slide-out" class="sidenav">
+  <li>
+    <div class="user-view">
+      <div class="background">
+        <!-- <img src="images/office.jpg"> -->
+      </div>
+      <!-- <a href="#user"><img class="circle" src="images/yuna.jpg"></a> -->
+      <!-- <a href="#name"><span class="white-text name">John Doe</span></a> -->
+      <!-- <a href="#email"><span class="white-text email">jdandturk@gmail.com</span></a> -->
+    </div>
+  </li>
+  <!-- <li><a href="#!"><i class="material-icons">cloud</i>First Link With Icon</a></li> -->
+  <li><a href="#createNewCustomerModal" class="modal-trigger" >Create New Customer</a></li>
+  <li>
+    <div class="divider"></div>
+  </li>
+  <li><a class="subheader">Subheader</a></li>
+  <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
+</ul>
+
+
+
+<script>
+  const createNewCustomerForm = document.querySelector('#createNewCustomerForm');
+  let fullNameError = document.querySelector('.fullname-error');
+  let emailError = document.querySelector('.email-error');
+  let passwordError = document.querySelector('.password-error');
+
+  createNewCustomerForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    emailError.textContent = ''; 
+    passwordError.textContent = '';
+    fullNameError.textContent = '';
+    const fullname = createNewCustomerForm.fullName.value;
+    const email = createNewCustomerForm.email.value;
+    const password = createNewCustomerForm.password.value;
+    try {
+      const res = await fetch('/signup', {
+        method: 'POST',
+        body: JSON.stringify({ fullname, email, password }),
+        headers: { 'Content-Type': 'application/json' },
+      });
+      const data = await res.json();
+      console.log(data.email);
+      if (data.errors) {
+        fullNameError.textContent = data.errors.fullname;
+        emailError.textContent = data.errors.email;
+        passwordError.textContent = data.errors.password;
+      }
+      if (data) {
+        location.assign('/adminpage')
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  })
+
+
+  // ISSUE CREDITS TO THE USER
+  // INJECT CUSTOMER ID TO THE MODAL
+  const issueCreditsBtn = document.querySelectorAll('.issueCreditsBtn');
+    issueCreditsBtn.forEach((elem) => {
+      elem.addEventListener('click', function (event) {
+        event.preventDefault();
+        const customerId = this.parentNode.id;
+        console.log(customerId);
+        const issueCreditsmodal = M.Modal.getInstance(document.querySelector('#issueCreditsToCustomerModal'));
+        const customerIDHolder = document.querySelector('#customerID');
+        customerIDHolder.value = customerId;
+      });
+    });
+    
+    const issueCreditsToCustomerForm = document.querySelector('#issueCreditsToCustomerForm');
+    issueCreditsToCustomerForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      let customerid = issueCreditsToCustomerForm.customerID.value;
+      console.log(customerid);
+      let credits = issueCreditsToCustomerForm.issueCredits.value;
+      if (isNaN(credits)) {
+        document.getElementById('numberError').style.display = 'block';
+      } else {
+        try {
+          const res = await fetch('/issuecreditsendpoint', {
+            method: 'POST',
+            body: JSON.stringify({ customerid, credits }),
+            headers: { 'Content-Type': 'application/json' }
+          });
+          const data = await res.json();
+          console.log(data.acknowledged);
+          if (data.errors) {
+            console.log(data.errors.message);
+          }
+          if (data.acknowledged) {
+            issueCreditsToCustomerForm.reset();
+            let elem = document.querySelector('#issueCreditsToCustomerModal');
+            M.Modal.init();
+            let instance = M.Modal.getInstance(elem);
+            instance.close();
+            location.assign('/adminpage');
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    });
+
+
+    
+
+    // delete customer
+    // INJECT CUSTOMER ID TO THE MODAL
+    const deleteCustomerBtn = document.querySelectorAll('.deleteCustomerBtn');
+    deleteCustomerBtn.forEach((elem) => {
+      elem.addEventListener('click', function (event) {
+        event.preventDefault();
+        const customerId = this.parentNode.id;
+        const customerfullName = this.parentNode.dataset.fullname;
+        const issueCreditsmodal = M.Modal.getInstance(document.querySelector('#deleteCustomerModal'));
+        const customerIDHolder = document.querySelector('#deleteCustomerDislayName');
+        customerIDHolder.classList = customerId;
+        customerIDHolder.innerText = `Customer Name : ${customerfullName}`;;
+      });
+    });
+
+    const deleteCustomerForm = document.querySelector('#deleteCustomerForm');
+    deleteCustomerForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const customerIDHolder = document.querySelector('#deleteCustomerDislayName');
+      const customerId = customerIDHolder.classList;
+      try {
+        const res = await fetch('/deletecustomer', {
+          method: 'POST',
+          body: JSON.stringify({ customerId }),
+          headers: { 'Content-Type': 'application/json' }
+        });
+        const data = await res.json();
+        console.log(data);
+        if (data.message == 'Customer deleted successfully') {
+          deleteCustomerForm.reset();
+          let elem = document.querySelector('#deleteCustomerModal');
+          M.Modal.init();
+          let instance = M.Modal.getInstance(elem);
+          instance.close();
+          location.assign('/adminpage');
+        } else if (data.message === 'Customer not found') {
+          console.log('something went wrong');
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    });
+
+
+    // SET WEBHOOK
+    // INJECT WEBHOOK ID TO THE MODAL
+    const setWebhookBtn = document.querySelectorAll('.setWebhookBtn');
+    setWebhookBtn.forEach((elem) => {
+      elem.addEventListener('click', function (event) {
+        event.preventDefault();
+        const customerId = this.parentNode.id;
+        const webhookURL = this.parentNode.getAttribute('data-webHook');
+        const issueCreditsmodal = M.Modal.getInstance(document.querySelector('#setwebhookModal'));
+        const webhookInput = document.querySelector('#setWebhook');
+        webhookInput.classList = customerId;
+        webhookInput.value = webhookURL;
+      });
+    });
+
+
+
+    
+    const enterWebhookForm = document.querySelector('#enterWebhookForm');
+    enterWebhookForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const webhookInput = document.querySelector('#setWebhook');
+      const customerId = webhookInput.classList;
+      console.log(customerId);
+      let webhookURL = enterWebhookForm.setWebhook.value;
+        try {
+          const res = await fetch('/setwebhook', {
+            method: 'POST',
+            body: JSON.stringify({ customerId, webhookURL }),
+            headers: { 'Content-Type': 'application/json' }
+          });
+          const data = await res.json();
+          console.log(data.acknowledged);
+          if (data.errors) {
+            console.log(data.errors.message);
+          }
+          if (data.acknowledged) {
+            issueCreditsToCustomerForm.reset();
+            let elem = document.querySelector('#setwebhookModal');
+            M.Modal.init();
+            let instance = M.Modal.getInstance(elem);
+            instance.close();
+            location.assign('/adminpage');
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      
+    });
+
+
+
+</script>
+<%- include('partials/footer'); -%>
