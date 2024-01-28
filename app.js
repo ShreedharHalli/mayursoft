@@ -263,7 +263,7 @@ app.post('/api/sendmessage', async (req, res) => {
               let sessionObj = sessionMap.get(customerId);
               const client = sessionObj.client;
               if (messagetype === 'text') {
-                await client.sendMessage(`${mobileno}@c.us`, message).then(async (response) => {
+                await client.sendMessage(`${mobileno}@c.us`, message, { linkPreview: true } ).then(async (response) => {
                   await User.updateOne({ _id: customerId }, { $inc: { AvailableCredits: -1 } });
                   let customerName = user.fullname;
                   let messageId = response._data.id._serialized;
@@ -295,7 +295,7 @@ app.post('/api/sendmessage', async (req, res) => {
                 console.log('filepath is ' + filePath);
                 const media = MessageMedia.fromFilePath(filePath);
                 console.log('media is ' + media);
-                await client.sendMessage(`${mobileno}@c.us`, media, { caption: message }).then(async (response) => {
+                await client.sendMessage(`${mobileno}@c.us`, media, { caption: message, linkPreview: true }).then(async (response) => {
                   await User.updateOne({ _id: customerId }, { $inc: { AvailableCredits: -1 } });
                   let customerName = user.fullname;
                   let messageId = response._data.id._serialized;
