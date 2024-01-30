@@ -13,7 +13,6 @@ const { requireAuth, checkUser } = require('./middleware/authMiddleware');
 const { Server } = require("socket.io");
 const http = require("http");
 const User = require('./models/User');
-// const { unsubscribe } = require("diagnostics_channel");
 const MessageLog = require('./models/MessageLog');
 
 
@@ -369,8 +368,6 @@ async function initiateAllWhatsappClients() {
             msgFrom: from.replace(/@c\.us$/, ''),
             msgFromMe: fromMe,
             msgId: id.id,
-            msgSerialized: id._serialized,
-            msgServerWaNo: serverWaNo,
           };
           console.log(`on message event is fired: ${msg.body}`);
           const webhookURL = user.webHookUrl;
@@ -392,6 +389,7 @@ async function initiateAllWhatsappClients() {
             case 3:
               // The message was read
               const setMsgStatusToSeen = await MessageLog.updateOne({ messageId: msg._data.id._serialized }, { $set: { status: 'Seen' } });
+              console.log('The message was SEEN', msg.body, 'and the id is ' + msg._data.id._serialized);
               // Update message doc here
               break;
             // Add more cases as needed
