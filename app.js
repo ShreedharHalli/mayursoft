@@ -371,7 +371,7 @@ async function initiateAllWhatsappClients() {
           };
           console.log(`on message event is fired: ${msg.body}`);
           const webhookURL = user.webHookUrl;
-          console.log(webhookURL);
+          console.log(`user is ${user} and webhook URL is ${webhookURL}`);
           if (webhookURL === 'nowebhook') {
             return;
           } else {
