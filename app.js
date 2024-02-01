@@ -237,14 +237,13 @@ app.post('/deleteConnectedwhatsapp', requireAuth, async (req, res) => {
 
 app.post('/api/sendmessage', async (req, res) => {
   let { customerId, message, mobileno, messagetype } = req.body;
-  console.log(customerId);
-  // res.status(200).json({ custId: customerId, message: message, mobileno: mobileno, messagetype: messagetype  });
   try {
     User.findById(customerId)
       .then(async (user) => {
         if (!user) {
           return res.status(404).json({ error: 'Invalid Customer ID' });
         } else {
+          console.log(`User ${user.fullname} has sending message`)
           if (user.AvailableCredits < 1) {
             res.status(500).json({
               status: false,
@@ -371,7 +370,6 @@ async function initiateAllWhatsappClients() {
           };
           console.log(`on message event is fired: ${msg.body}`);
           const webhookURL = user.webHookUrl;
-          console.log(`user is ${user} and webhook URL is ${webhookURL}`);
           if (webhookURL === 'nowebhook') {
             return;
           } else {
