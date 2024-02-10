@@ -467,7 +467,7 @@ app.post('api/missedcallalert', async (req, res) => {
     message += 'Senior Relationship Manager : Mr. Shreedhar : 91 78878 92244' + '/n';
     if (state === 'CONNECTED') {
       console.log('client is connected');
-      await client.sendMessage(`91${cleanedNumberToSend}@c.us`, message).then(async (response) => {
+      await client.sendMessage(`${cleanedNumberToSend}@c.us`, message).then(async (response) => {
         console.log(response);
       }).catch(err => {
         console.log(err);
