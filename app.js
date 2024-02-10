@@ -455,7 +455,8 @@ async function initiateAllWhatsappClients() {
 app.post('api/missedcallalert', async (req, res) => {
   console.log('missed call alert');
   const { user, numbertosend } = req.body;
-  console.log(user, numbertosend);
+  const cleanedNumberToSend = numbertosend.startsWith('+') ? numbertosend.substring(1) : numbertosend;
+  console.log(user, cleanedNumberToSend);
   const client = 'session-65b3333929eae8a494f8a9cd';
     const state = await client.getState();
     const message = ''
@@ -466,7 +467,7 @@ app.post('api/missedcallalert', async (req, res) => {
     message += 'Senior Relationship Manager : Mr. Shreedhar : 91 78878 92244' + '/n';
     if (state === 'CONNECTED') {
       console.log('client is connected');
-      await client.sendMessage(`91${numbertosend}@c.us`, message).then(async (response) => {
+      await client.sendMessage(`91${cleanedNumberToSend}@c.us`, message).then(async (response) => {
         console.log(response);
       }).catch(err => {
         console.log(err);
