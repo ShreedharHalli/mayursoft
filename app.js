@@ -454,8 +454,8 @@ async function initiateAllWhatsappClients() {
 
 app.post('api/missedcallalert', async (req, res) => {
   console.log('missed call alert');
-  const { user, numbertosend } = req.body;
-  const cleanedNumberToSend = numbertosend.startsWith('+') ? numbertosend.substring(1) : numbertosend;
+  const { user, num } = req.body;
+  const cleanedNumberToSend = num.startsWith('+') ? num.substring(1) : num;
   console.log(user, cleanedNumberToSend);
   const client = 'session-65b3333929eae8a494f8a9cd';
     const state = await client.getState();
