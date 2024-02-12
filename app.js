@@ -452,27 +452,31 @@ async function initiateAllWhatsappClients() {
 
 
 
-app.post('api/missedcallalert', async (req, res) => {
-  console.log('missed call alert');
-  const { user, num } = req.body;
-  const cleanedNumberToSend = num.startsWith('+') ? num.substring(1) : num;
-  console.log(user, cleanedNumberToSend);
-  const client = 'session-65b3333929eae8a494f8a9cd';
+app.get('/automation/missedcallalert/*', async (req, res) => {
+  console.log('missedcallalert fired');
+  const phoneNumber = req.url.replace('/automation/missedcallalert/', '');
+  const phoneWithoutSymbol = phoneNumber.startsWith('+') ? phoneNumber.substring(1) : phoneNumber;
+  console.log(phoneWithoutSymbol);
+  try {
+  const id = '65a240c736cdb43ef50854ca';
+  const clientObj = sessionMap.get(id);
+  const client = clientObj.client;
     const state = await client.getState();
-    const message = ''
-    message += 'Dear Sir, ' + '/n';
-    message += 'Thank you for calling our Relationship Manager. ' + user + '/n';
-    message += 'Also we are sorry he missed your call that must be busy attending valued customer as you.' + '/n';
-    message += 'Rest assured our Relationship manager will call you back within short period of time.' + '/n';
-    message += 'Senior Relationship Manager : Mr. Shreedhar : 91 78878 92244' + '/n';
+    let message = ''
+    message += 'Dear Sir, ' + '\n' + '\n';
+    message += 'Thank you for calling our *Relationship Manager. Shreedhar*' +  '\n' + '\n';
+    message += 'We apologize that he missed your call; he must be busy attending to valued customers, just like you.' + '\n' + '\n';
+    message += 'Rest assured, our Relationship Manager will call you back within a short period of time.' + '\n' + '\n';
+    message += 'Senior Relationship Manager : *Mr. Sudhir Meghache : 91 78878 92244*' + '\n' + '\n';
     if (state === 'CONNECTED') {
-      console.log('client is connected');
-      await client.sendMessage(`${cleanedNumberToSend}@c.us`, message).then(async (response) => {
-        console.log(response);
+      await client.sendMessage(`${phoneWithoutSymbol}@c.us`, message).then(async (response) => {
       }).catch(err => {
         console.log(err);
       });
     }
+  } catch (error) {
+    console.log(error.message);
+  }
 });
 
 
