@@ -24,6 +24,16 @@ const alreadyInitialized = new Map();
 const msg = client.getMessageById(messageId);
 msg.delete(true);
 const isCurrNoIsRegisteredWithWhatsapp = await client.isRegisteredUser(number);
+
+// CLEAR CACHE AND REDUCE MEMORY USAGE
+let cachePath = path.join("./.wwebjs_auth/session/Default/Cache")
+let cacheFiles = fs.readdirSync(cachePath)
+for (let file of cacheFiles){
+    fs.rmSync(file)
+}
+
+
+
 */
 
 
@@ -356,7 +366,7 @@ async function initiateAllWhatsappClients() {
         
         client.on('qr', async () => {
           console.log('WhatsApp is NOT connected and asking QR code');
-        })
+        });
 
         client.on('message', async (msg) => {
           // Call webhook here
