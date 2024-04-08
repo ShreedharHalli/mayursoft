@@ -185,6 +185,7 @@ function whatsappFactoryFunction(clientId) {
        remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2409.2.html'
    }
   });
+}
 
 
 async function insertClientDetailstoCustDoc(customerId, connectedWhatsappNo) {
