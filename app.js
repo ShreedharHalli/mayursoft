@@ -158,6 +158,7 @@ io.on("connection", (socket) => {
 
 
 // Function to create a new WhatsApp client instance
+// Function to create a new WhatsApp client instance
 function whatsappFactoryFunction(clientId) {
   const client = new Client({
     restartOnAuthFail: true,
@@ -178,10 +179,12 @@ function whatsappFactoryFunction(clientId) {
     authStrategy: new LocalAuth({
       clientId: clientId,
     }),
+    webVersion: '2.2409.2',
+    webVersionCache: {
+       type: 'remote',
+       remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2409.2.html'
+   }
   });
-
-  return client;  // Return the client instance, not the Client class
-}
 
 
 async function insertClientDetailstoCustDoc(customerId, connectedWhatsappNo) {
