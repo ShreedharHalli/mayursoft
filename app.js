@@ -258,7 +258,7 @@ app.post('/api/sendmessage', async (req, res) => {
         if (!user) {
           return res.status(404).json({ error: 'Invalid Customer ID' });
         } else {
-          console.log(`User ${user.fullname} has sending message`)
+          console.log(`User ${user.fullname} is sending message`)
           if (user.AvailableCredits < 1) {
             res.status(500).json({
               status: false,
@@ -285,12 +285,6 @@ app.post('/api/sendmessage', async (req, res) => {
                     status: true,
                     response: 'Message sent successfully',
                     messageId: messageId
-                  }).catch(err => {
-                    console.log(err);
-                    res.status(500).json({
-                      status: false,
-                      response: err.message
-                    })
                   });
                 });
               } else if (messagetype === 'file') {
@@ -385,12 +379,10 @@ async function initiateAllWhatsappClients() {
           };
           console.log(`on message event is fired: ${msg.body}`);
           const webhookURL = user.webHookUrl;
-          console.log(webhookURL);
           if (webhookURL === 'nowebhook') {
             return;
           } else {
             try {
-              console.log(object)
               await axios.post(webhookURL, JSON.stringify(object));
             } catch (error) {
               console.log(error.message);
