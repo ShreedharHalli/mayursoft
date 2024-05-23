@@ -312,14 +312,7 @@ app.post('/api/sendmessage', async (req, res) => {
                     status: true,
                     response: 'Message sent successfully',
                     messageId: messageId
-                  }).catch(err => {
-                    manageUploadedFile('delete', file);
-                    console.log(err);
-                    res.status(500).json({
-                      status: false,
-                      response: err.message
-                    })
-                  });
+                  })
                 });
               }
             }
