@@ -164,7 +164,7 @@ function whatsappFactoryFunction(clientId) {
     restartOnAuthFail: true,
     qrMaxRetries: 10, // keep it outside of the puppeteer object
     puppeteer: {
-      executablePath: '/usr/bin/google-chrome-stable',
+      // executablePath: '/usr/bin/google-chrome-stable',
       headless: true,
       args: [
         '--no-sandbox',
@@ -385,10 +385,12 @@ async function initiateAllWhatsappClients() {
           };
           console.log(`on message event is fired: ${msg.body}`);
           const webhookURL = user.webHookUrl;
+          console.log(webhookURL);
           if (webhookURL === 'nowebhook') {
             return;
           } else {
             try {
+              console.log(object)
               await axios.post(webhookURL, JSON.stringify(object));
             } catch (error) {
               console.log(error.message);
