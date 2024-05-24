@@ -376,7 +376,7 @@ async function initiateAllWhatsappClients() {
             return;
           } else {
             try {
-              console.log(userfullname)
+              console.log(user.fullname)
               console.log(webhookURL);
               console.log(JSON.stringify(object));
               await axios.post(webhookURL, JSON.stringify(object));
