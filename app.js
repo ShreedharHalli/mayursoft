@@ -376,8 +376,11 @@ async function initiateAllWhatsappClients() {
             return;
           } else {
             try {
+              console.log(webhookURL);
+              console.log(JSON.stringify(object));
               await axios.post(webhookURL, JSON.stringify(object));
             } catch (error) {
+              console.log(error);
               console.log(error.message);
             }
           }
