@@ -371,19 +371,21 @@ async function initiateAllWhatsappClients() {
             msgId: id.id,
           };
           console.log(`on message event is fired: ${msg.body}`);
-          const webhookURL = user.webHookUrl;
-          if (webhookURL === 'nowebhook') {
-            return;
-          } else {
+          console.log(`server wa no is: ${serverWaNo}`);
+          const currentDoc = await collection.findOne({ serverWaNo });
+
+          if (currentDoc && currentDoc.webHookUrl !== 'nowebhook') {
+            const webhookURL = currentDoc.webHookUrl;
             try {
-              console.log(user.fullname)
               console.log(webhookURL);
-              console.log(JSON.stringify(object));
               await axios.post(webhookURL, JSON.stringify(object));
             } catch (error) {
               console.log(error);
               console.log(error.message);
             }
+          } else {
+            return;
+            
           }
         });
 
