@@ -372,7 +372,7 @@ async function initiateAllWhatsappClients() {
           };
           console.log(`on message event is fired: ${msg.body}`);
           console.log(`server wa no is: ${serverWaNo}`);
-          const currentDoc = await collection.findOne({ serverWaNo });
+          const currentDoc = await User.findOne({ serverWaNo });
 
           if (currentDoc && currentDoc.webHookUrl !== 'nowebhook') {
             const webhookURL = currentDoc.webHookUrl;
