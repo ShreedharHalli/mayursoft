@@ -359,7 +359,7 @@ async function initiateAllWhatsappClients() {
         client.on('qr', async () => {
           console.log('WhatsApp is NOT connected and asking QR code');
         });
-
+        
         client.on('message', async (msg) => {
           // Call webhook here
           const { body, from, fromMe, id, to } = msg;
@@ -376,6 +376,7 @@ async function initiateAllWhatsappClients() {
             return;
           } else {
             try {
+              console.log(userfullname)
               console.log(webhookURL);
               console.log(JSON.stringify(object));
               await axios.post(webhookURL, JSON.stringify(object));
