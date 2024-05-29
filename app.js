@@ -179,10 +179,10 @@ function whatsappFactoryFunction(clientId) {
     authStrategy: new LocalAuth({
       clientId: clientId,
     }),
-    webVersion: '2.2409.2',
+    webVersion: '2.2409.4-beta',
     webVersionCache: {
        type: 'remote',
-       remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2409.2.html'
+       remotePath: 'https://raw.githubusercontent.com/wppconnect-team/wa-version/main/html/2.2409.4-beta.html'
    }
   });
   return client;  // Return the client instance, not the Client class
