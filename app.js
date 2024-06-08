@@ -361,6 +361,7 @@ async function initiateAllWhatsappClients() {
         });
         
         client.on('message', async (msg) => {
+          console.log('one message event is fired');
           // Call webhook here
           const { body, from, fromMe, id, to } = msg;
           const connectedWhatsappNo = to.replace(/@c\.us$/, '');
